@@ -24,9 +24,9 @@ def hypothenuse(a, b):
 
 # get field dict from str
 def get_field(s):
-    x1 = int(get_digit(s[0]))
-    y1 = int(s[1])
-    return {"x": x1, "y": y1}
+    x = int(get_digit(s[0]))
+    y = int(s[1])
+    return {"x": x, "y": y}
 
 
 if (len(sys.argv) != 3):
@@ -34,22 +34,23 @@ if (len(sys.argv) != 3):
     sys.exit()
 
 
-# get fields: current field and field to check from input as strings
-# field1_str = input("enter field 1>")
-# field2_str = input("enter field 2>")
-field1_str = sys.argv[1]
-field2_str = sys.argv[2]
+# get strings from arguments and convert to point ( example: a1 => {x:1,y:1} )
+field_start = get_field(sys.argv[1])
+field_finish = get_field(sys.argv[2])
 
-# convert from field str to point a1 to x:1 y:1
-field1 = get_field(field1_str)
-field2 = get_field(field2_str)
 
-# sampe fields
+# sample fields
 a1 = get_field("a1")
 b3 = get_field("b3")
 
+
 # distance possible for knight to go
 knight_distance = get_distance(a1, b3)
-current_dictance = get_distance(field1, field2)
-result = (current_dictance == knight_distance)
+
+# distance between entered fields
+current_distance = get_distance(field_start, field_finish)
+
+# is distance the same
+result = (current_distance == knight_distance)
+
 print(result)
