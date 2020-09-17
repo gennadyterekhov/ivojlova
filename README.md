@@ -18,5 +18,5 @@ purely educational
 1. ok
 2. ok
 3. ok
-4.  
+4. +- не знаю линейно или нет
 5. 
