@@ -16,7 +16,7 @@ purely educational
 ## Status
 
 1. ok
-2. 
+2. ok
 3. 
 4.  
 5. 
