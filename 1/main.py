@@ -1,9 +1,21 @@
+import math
+
 # get digital representation of letter coordinate
 def get_digit(ch):
     digits = [ 1, 2, 3, 4, 5, 6, 7, 8]
     letters = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
     i = letters.index(ch)
     return digits[i]
+
+
+# get distance between 2 points
+def get_distance(point1, point2):
+    pass
+
+
+# calculate hypothenuse
+def hypothenuse(a, b):
+    return math.sqrt(a**2 + b**2)
 
 
 # get all possible fields for a knight
