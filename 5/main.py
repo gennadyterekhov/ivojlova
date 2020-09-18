@@ -1,43 +1,32 @@
-# 5. Зализняк. Дан путь к директории, в которой лежат текстовые файлы. Программа должна считать все тексты из этих файлов и все словоформы из этих текстов отсортировать по концу (как в словаре Зализняка). Словарь должен печататься в файлы "А.txt", "Б.txt", и так далее, в зависимости от последней буквы. Общий путь к этим файлам вводится с экрана, и может содержать несуществующие папки. Все файлы содержат много строк, и не должны ни в какой момент ни в каком виде целиком находиться в оперативной памяти. Сортировка должна учитывать букву ё. Программе для хранения совокупности словоформ разрешено использовать не более одного множества и не более одного списка (длины, соответствующей количеству различных словоформ в данных). Программа должна работать либо со сложностью, не превышающей сложность сортировки (быстрее, чем квадратично), либо не использовать множества (но тогда можно квадратично). Слова должны быть выровнены по правому краю, а ширина колонки должна зависеть от самого длинного встретившегося слова. 
-
-TZ = '''
-1. брать все файлы из папки инпут.
-2. все их читать построчно
-3. строки превращать в сет слов
-4. и складывать в один большой лист
-5. один большой лист в сет и обратно в лист чтобы удалить дубликаты
-6. написать функцию сортировки по правому краю
-7. пользователь может вводить путь до выходного файла, в т.ч не сущ. папки
-'''
-
-
 import sys
 import os
-# from os import listdir
-# from os.path import isfile, join
+import math
 
-INPUT_DIR = 'input'
-OUTPUT_DIR = 'output'
+# rm all files in output folder
+def clear_output_folder(output_dir):
+    os.system('rm {}/*'.format(output_dir))
 
-def get_input_filenames(dirname):
-    # в одну строку но я так не умею
-    # onlyfiles = [f for f in os.listdir(input_dir) if os.path.isfile(os.path.join(input_dir, f))]
 
-    # absolute path to input dir
-    input_dir_abs = os.path.dirname(os.path.realpath(__file__)) + '/{}'.format(dirname)
+# works only for dirs in current file's dir
+def get_absolute_path(dirname_rel):
+    return os.path.dirname(os.path.realpath(__file__)) + '/' + dirname_rel
+
+# get all filenames from a dir
+def get_input_filenames(dirname_abs):
     files = []
-    for file in os.listdir(input_dir_abs):
-        temp_el = os.path.join(input_dir_abs, file)
+    for file in os.listdir(dirname_abs):
+        temp_el = os.path.join(dirname_abs, file)
         if (os.path.isfile(temp_el)):
             files.append(temp_el)
     return files
 
+
 # removes punctuation from lines and splits them by space
 def get_words_from_line(line):
-    punctuation = ', . /  : ; ? !'.split(' ')
+    punctuation = ', . /  : ; ? ! ( ) \n'.split(' ')
     for sign in punctuation:
         line = line.replace(sign, '')
-    return line.split(' ')
+    return line.lower().split(' ')
 
 
 def remove_doubles(lst):
@@ -45,6 +34,7 @@ def remove_doubles(lst):
     return lst    
 
 
+# get all words from a file
 def get_wordforms_from_file(filename):
     words = []
     with open(filename) as infile:
@@ -61,26 +51,58 @@ def flip_all_words(lst):
     return lst
 
 
-def write_to_file(filename):
-    pass
+def write_to_files(output_dir_abs, lst):
+    longest_word = max(lst, key=len)
+    for w in lst:
+        if (w == ''):
+            continue
+        output_filename = output_dir_abs + '/' + w[0].upper() + '.txt'
+        # test to print everything in one file
+        # output_filename = output_dir_abs + '/' + 'ALL' + '.txt'
+
+        with open(output_filename, 'a') as outfile:
+            spaces = ' ' * (len(longest_word) - len(w))
+            temp_str = spaces + reverse(w) + '\n'
+            outfile.write(temp_str)
+    return True
 
 
 def main():
+    if (len(sys.argv) != 3):
+        print("invalid number of arguments")
+        sys.exit()
 
-    onlyfiles = get_input_filenames(INPUT_DIR)
+    
+    # get absolute paths
+    input_dir_abs = get_absolute_path(sys.argv[1])
+    output_dir_abs = get_absolute_path(sys.argv[2])
+
+    # create output folder of remove previous if exists
+    if (not os.path.isdir(output_dir_abs)):
+        # create folder if doesnt exist
+        os.system('mkdir -p {}'.format(output_dir_abs))
+        # os.mkdir(output_dir_abs)
+    else:  
+        clear_output_folder(output_dir_abs)
+
+
+    input_filenames = get_input_filenames(input_dir_abs)
 
     all_words = []
-    for file in onlyfiles:
-        all_words.extend(get_wordforms_from_file(file))
+    for f in input_filenames:
+        all_words.extend(get_wordforms_from_file(f))
 
-    # получаем словоформы без повторений
+    # get wordforms w/o doubles
     all_words = remove_doubles(all_words)
     
-    # отражаем чтобы отсортировать
+    # flip to sort by ending
     all_words = flip_all_words(all_words)
     all_words.sort()
 
-    print(all_words)
+    # create dictionary
+    write_to_files(output_dir_abs, all_words)
+
+    print('ok')
 
 
 if __name__ == '__main__':
