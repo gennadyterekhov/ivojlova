@@ -13,7 +13,7 @@ start_time = time.time()
 
 def delete_all_ocurrences(lst, el):
     while (el in lst):
-        lst.pop(lst.index(el))     
+        lst.remove(el)
     return lst
 
 
