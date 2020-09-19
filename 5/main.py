@@ -58,7 +58,7 @@ def write_to_files(output_dir_abs, lst):
             continue
         output_filename = output_dir_abs + '/' + w[0].upper() + '.txt'
         # test to print everything in one file
-        # output_filename = output_dir_abs + '/' + 'ALL' + '.txt'
+        output_filename = output_dir_abs + '/' + 'ALL' + '.txt'
 
         with open(output_filename, 'a') as outfile:
             spaces = ' ' * (len(longest_word) - len(w))

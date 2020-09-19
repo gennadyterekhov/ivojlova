@@ -1,40 +1,40 @@
+import matplotlib.pyplot as plt
 import time
-import random
 
 
-MIN = 1
-MAX = 10
-MIN_LIST_LEN = 10
-MAX_LIST_LEN = 100
-
-# start timer
-start_time = time.time()
+def plot(x, y):
+    plt.plot(x, y)
+    plt.xlabel('x - axis')
+    plt.ylabel('y - axis')
+    plt.title('Line graph!')
+    plt.show()
 
 
 def delete_all_ocurrences(lst, el):
-    while (el in lst):
-        lst.remove(el)
-    return lst
-
+    lst = [i for i in lst if i != el]
+    return lst    
 
 
 element_to_delete = 5
-list_to_check = [1, 2, 5, 4, 5, 5, 5, 6, 7, 5, 55, 8]
+list_to_check = list(range(10))
 
 
-# list_to_check = random.sample(range(MIN, MAX + 1), MAX_LIST_LEN)
-# element_to_delete = list_to_check[random.randint(MIN, MAX_LIST_LEN - 1)]
+x = []
+y = []
 
 
-print("изначальный список (длина {}):".format(len(list_to_check)))
-print(list_to_check)
+lens = [x for x in range(1, 10000) if x % 100 == 0]
+prev_time = 0.001
+for test_list_len in lens:
+    start_test_time = time.time()
+    res = delete_all_ocurrences(list_to_check * test_list_len, element_to_delete)
+    exec_time = time.time() - start_test_time
+    growth = exec_time / prev_time
+    prev_time = exec_time
+    l = test_list_len * len(list_to_check)
+    x.append(l)
+    y.append(exec_time)
+    print('готово (длина {})'.format(l))
+    # print('готово (длина {}) время: {}\n дольше в {} раз чем предыдущая попытка'.format(l, exec_time, growth))
 
-# должно быть линейным
-delete_all_ocurrences(list_to_check, element_to_delete)
-
-print("список после обработки (длина {}):".format(len(list_to_check)))
-print(list_to_check)
-
-
-# print execution time
-print("\nexecution time {} seconds".format(time.time() - start_time))
+plot(x, y)
